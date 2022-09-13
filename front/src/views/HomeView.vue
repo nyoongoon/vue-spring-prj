@@ -1,31 +1,30 @@
 <script setup lang="ts">
-const posts = [
-  {id: 1, title: "제목1", content: "내용1"},
-  {id: 2, title: "제목2", content: "내용2"},
-  {id: 3, title: "제목3", content: "내용3"},
-  {id: 4, title: "제목4", content: "내용4"},
-];
+import axios from "axios";
+import {ref} from "vue";
+
+const posts = ref([]); //반응형 데이터로 설정해줘야함(ref)
+
+axios.get("/api/posts?page=1&size=5").then((response) => {
+  response.data.forEach((r: any) => {
+    posts.value.push(r);
+  });
+});
+//console.log(response);
+
 </script>
 
 <template>
-  <ul>
-    <li v-for="post in posts" :key="post.id">
-      <div>
-        {{post.title}}
-      </div>
-
-      <div>
-        {{post.content}}
-      </div>
-    </li>
-  </ul>
+  <main>
+    <ul>
+      <li v-for="post in posts" :key="post.id">
+        <div>
+          {{ post.title }}
+        </div>
+        <div>
+          {{ post.content }}
+        </div>
+      </li>
+    </ul>
+  </main>
 </template>
 
-<style scoped>
-li{
-  margin-bottom : 1rem;
-}
-li:last-child{
-  margin-bottom: 0;
-}
-</style>

@@ -11,6 +11,7 @@ const write = () => {
     title: title.value,
     content: content.value
   }); //요청 테스트
+
 }
 </script>
 
@@ -26,8 +27,6 @@ const write = () => {
   <div class="mt-2">
     <el-button type="primary" @click="write()">글 작성완료</el-button>
   </div>
-
-  <HomeView/>
 </template>
 
 <style>
