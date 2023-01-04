@@ -20,12 +20,21 @@ public class PostController {
 
     private final PostService postService;
 
+    @GetMapping("/test")
+    public String test(){
+        return "hello";
+    }
+    @GetMapping("/foo")
+    public String foo(){
+        return "foo";
+    }
+
     // Http Method
     // GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     // 글 등록
     // POST Method
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request) {
+    public void post(@RequestBody @Valid PostCreate request, @RequestHeader String authorization) {
         //Post 성공 -> 200, 201
         // Post 요청 케이스
         // Case1. 저장한 데이터 Entity => response로 그대로 응답하기
@@ -35,8 +44,16 @@ public class PostController {
         /*if (request.getTitle().contains("바보")){
             throw new InvalidRequest();
         }*/
-        request.validate();
-        postService.write(request);
+
+        // 인증 방법
+        // 1. get parameter => @RequestParam // 주소는 "리소스를 식별하는 방법"이므로 인증 데이터 포함은 지양
+        // 2. post body value => PostCreate는 인증과는 무관하기 때문에 post에 인증 데이터 추가는 좋은 방법이 아님
+        // 3. Header => @RequestHeader
+        if(authorization.equals("hodolman")){
+
+            request.validate();
+            postService.write(request);
+        }
     }
 
     /*  /post -> 글 전체 조회(검색 + 페이징)
@@ -61,12 +78,17 @@ public class PostController {
 
 
     @PatchMapping("/posts/{postId}") //PATCH /posts/{postId}
-    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request){
-        postService.edit(postId, request);
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request,
+                        @RequestHeader String authorization){
+        if(authorization.equals("hodolman")){
+            postService.edit(postId, request);
+        }
     }
 
     @DeleteMapping("/posts/{postId}")
-    public void delete(@PathVariable Long postId){
-        postService.delete(postId);
+    public void delete(@PathVariable Long postId, @RequestHeader String authorization){
+        if(authorization.equals("hodolman")){
+            postService.delete(postId);
+        }
     }
 }

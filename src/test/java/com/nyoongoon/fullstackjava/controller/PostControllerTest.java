@@ -45,30 +45,10 @@ class PostControllerTest {
         postRepository.deleteAll();
     }
 
-    /*@Test
-    @DisplayName("/posts 요청시 Hello World를 출력한다.")
-    void test() throws Exception {
-        //.content("{\"title\" : \"제목입니다. \", \"content\" : \"내용입니다.\"}") => 가독성 너무 떨어져서 수정하기.
-        //given
-        PostCreate request = PostCreate.builder() //생성자 입력순서 헷갈리는 위험 없애줌
-                .title("제목입니다.")
-                .content("내용입니다.")
-                .build();
-        //ObjectMapper objectMapper = new ObjectMapper(); // 스프링에서 주입받을 수 있음.
 
-        String json = objectMapper.writeValueAsString(request); // json으로 변한됨.
-        // expected
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json) //content()에는 바이트나 스트링만 들어갈 수 있음 ! ->Jackson
-                )
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("{}"))
-                .andDo(MockMvcResultHandlers.print());
-    }*/
 
     @Test
-    @DisplayName("/posts 요청시 title값은 필수다.")
+    @DisplayName("글 작성 시 요청시 title값은 필수다.")
     void test2() throws Exception { // 타이틀이 null로 가는 케이스 => 빌더에서 타이틀 메소드 생략
         //given
         PostCreate request = PostCreate.builder() //생성자 입력순서 헷갈리는 위험 없애줌
@@ -89,7 +69,7 @@ class PostControllerTest {
 
 
     @Test
-    @DisplayName("/posts 요청시 DB에 값이 저장된다.")
+    @DisplayName("글 작성 시 요청시 DB에 값이 저장된다.")
     void test3() throws Exception {
         //given
         PostCreate request = PostCreate.builder() //생성자 입력순서 헷갈리는 위험 없애줌
@@ -99,7 +79,9 @@ class PostControllerTest {
         String json = objectMapper.writeValueAsString(request); // json으로 변한됨.
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/posts")
+                        .header("authorization", "hodolman")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
