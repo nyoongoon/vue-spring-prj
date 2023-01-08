@@ -25,7 +25,7 @@ public class PostController {
         return "hello";
     }
     @GetMapping("/foo")
-    public String foo(){
+    public String foo(){ //인증을 제외하고 싶은 경우 -> webMvcConfig에서 excludePathPatterns() 추가
         return "foo";
     }
 
