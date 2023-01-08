@@ -13,7 +13,8 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accessToken = request.getParameter("accessToken");
-        if(accessToken != null && accessToken.equals("hodolman")){
+        if(accessToken != null && !accessToken.equals("")){
+            request.setAttribute("userName", accessToken);
             return true;
         }
         //return false; false 리턴 보다는 인증x 예외 던지기

@@ -1,5 +1,6 @@
 package com.nyoongoon.fullstackjava.controller;
 
+import com.nyoongoon.fullstackjava.config.data.UserSession;
 import com.nyoongoon.fullstackjava.exception.InvalidRequest;
 import com.nyoongoon.fullstackjava.request.PostCreate;
 import com.nyoongoon.fullstackjava.request.PostEdit;
@@ -25,7 +26,8 @@ public class PostController {
         return "hello";
     }
     @GetMapping("/foo")
-    public String foo(){ //인증을 제외하고 싶은 경우 -> webMvcConfig에서 excludePathPatterns() 추가
+    public String foo(UserSession userSession){ //인증을 제외하고 싶은 경우 -> webMvcConfig에서 excludePathPatterns() 추가
+        log.info(">>> {}", userSession.name);
         return "foo";
     }
 
