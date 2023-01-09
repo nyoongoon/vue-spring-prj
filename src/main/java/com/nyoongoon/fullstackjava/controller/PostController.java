@@ -27,9 +27,9 @@ public class PostController {
     }
 
     @GetMapping("/foo")
-    public String foo(UserSession userSession){ //인증을 제외하고 싶은 경우 -> webMvcConfig에서 excludePathPatterns() 추가
-        log.info(">>> {}", userSession.name);
-        return "foo";
+    public Long foo(UserSession userSession){ //인증을 제외하고 싶은 경우 -> webMvcConfig에서 excludePathPatterns() 추가
+        log.info(">>> {}", userSession.id);
+        return userSession.id;
     }
 
     @GetMapping("/bar")
