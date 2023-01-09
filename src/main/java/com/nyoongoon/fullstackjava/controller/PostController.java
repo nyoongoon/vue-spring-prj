@@ -25,10 +25,16 @@ public class PostController {
     public String test(){
         return "hello";
     }
+
     @GetMapping("/foo")
     public String foo(UserSession userSession){ //인증을 제외하고 싶은 경우 -> webMvcConfig에서 excludePathPatterns() 추가
         log.info(">>> {}", userSession.name);
         return "foo";
+    }
+
+    @GetMapping("/bar")
+    public String bar(){
+        return "인증이 필요없는 페이지";
     }
 
     // Http Method
