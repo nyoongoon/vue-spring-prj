@@ -1,6 +1,6 @@
 ### intellij에서 http 요청 보내기
 ### 테스트 요청
 
-GET http://localhost:8080/foo
-Content-Type: : application/json
+POST http://localhost:8080/foo
+Content-Type: application/json
 Authorization: asdf
