@@ -2,6 +2,7 @@ package com.nyoongoon.fullstackjava.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "USERS")
@@ -36,10 +38,11 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void addSession(){
-//        uuid
-        sessions.add(Session.builder()
+    public Session addSession() {
+        Session session = Session.builder()
                 .user(this)
-                .build());
+                .build();
+        sessions.add(session);
+        return session;
     }
 }

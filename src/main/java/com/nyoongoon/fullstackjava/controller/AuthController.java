@@ -5,6 +5,7 @@ import com.nyoongoon.fullstackjava.exception.InvalidRequest;
 import com.nyoongoon.fullstackjava.exception.InvalidSiginInformation;
 import com.nyoongoon.fullstackjava.repository.UserRepository;
 import com.nyoongoon.fullstackjava.request.Login;
+import com.nyoongoon.fullstackjava.response.SessionResponse;
 import com.nyoongoon.fullstackjava.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +23,10 @@ public class AuthController { //로그인하여 토큰 발급
     private final AuthService authService;
 
     @PostMapping("/auth/login")
-    public void login(@RequestBody Login login){
+    public SessionResponse login(@RequestBody Login login){
         //json 아이디/비밀번호
         log.info(">>>login={}", login);
-        authService.sigin(login);
+        String accessToken = authService.sigin(login);
+        return new SessionResponse(accessToken);
     }
 }
