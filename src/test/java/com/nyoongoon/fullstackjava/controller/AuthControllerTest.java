@@ -1,7 +1,7 @@
 package com.nyoongoon.fullstackjava.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nyoongoon.fullstackjava.domain.Session;
 import com.nyoongoon.fullstackjava.domain.User;
 import com.nyoongoon.fullstackjava.repository.PostRepository;
 import com.nyoongoon.fullstackjava.repository.SessionRepository;
@@ -123,6 +123,32 @@ class AuthControllerTest {
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.accessToken", Matchers.notNullValue()))
+                .andDo(MockMvcResultHandlers.print());
+        //then
+
+    }
+
+    @Test
+    @DisplayName("로그인 후 권한이 필요한 페이지에 접속한다. /foo")
+    void test4() throws Exception {
+        //given
+        User user = User.builder()
+                .name("호돌맨")
+                .email("hodolman88@gmail.com")
+                .password("1234") // 암호화 알고리즘 -> Scrypt, Bcrypt
+                .build();
+        Session session = user.addSession();
+
+//        Login login = Login.builder()
+//                .email("hodolman88@gmail.com")
+//                .password("1234")
+//                .build();
+//        String json = objectMapper.writeValueAsString(login);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/foo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(MockMvcResultHandlers.print());
         //then
 

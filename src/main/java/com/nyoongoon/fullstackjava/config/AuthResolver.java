@@ -19,7 +19,7 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 //        String accessToken = webRequest.getParameter("accessToken");
         // getParameter 형태로 가져오면 다른 정보와 충돌이 될 수 있기 떄문에 헤더 사용!
         String accessToken = webRequest.getHeader("Authorization");
-        if(accessToken == null && accessToken.equals("")){
+        if(accessToken == null || accessToken.equals("")){
             throw new Unauthorized();
         }
         // DB 사용자 확인 작업
