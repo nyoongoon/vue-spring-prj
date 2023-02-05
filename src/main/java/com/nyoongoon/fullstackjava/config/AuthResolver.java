@@ -1,14 +1,23 @@
 package com.nyoongoon.fullstackjava.config;
 
 import com.nyoongoon.fullstackjava.config.data.UserSession;
+import com.nyoongoon.fullstackjava.domain.Session;
 import com.nyoongoon.fullstackjava.exception.Unauthorized;
+import com.nyoongoon.fullstackjava.repository.SessionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Optional;
+
+@RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
+
+    private final SessionRepository sessionRepository;
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
        return parameter.getParameterType().equals(UserSession.class);
@@ -24,7 +33,9 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         }
         // DB 사용자 확인 작업
         // ...
+        Session session = sessionRepository.findByAccessToken(accessToken)
+                .orElseThrow(Unauthorized::new);
 
-        return new UserSession(1L); // 디비 넘어온값 인자로 추후 넣기
+        return new UserSession(session.getUser().getId());
     }
 }

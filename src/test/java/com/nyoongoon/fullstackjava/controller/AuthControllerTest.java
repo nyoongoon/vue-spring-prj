@@ -138,14 +138,34 @@ class AuthControllerTest {
                 .password("1234") // 암호화 알고리즘 -> Scrypt, Bcrypt
                 .build();
         Session session = user.addSession();
+        userRepository.save(user);
 
-//        Login login = Login.builder()
-//                .email("hodolman88@gmail.com")
-//                .password("1234")
-//                .build();
-//        String json = objectMapper.writeValueAsString(login);
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/foo")
+                        .header("Authorization", session.getAccessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+        //then
+
+    }
+
+    @Test
+    @DisplayName("로그인 후 검증되지 않은 세션값으로 권한이 필요한 페이지에 접속할 수 없다.")
+    void test5() throws Exception {
+        //given
+        User user = User.builder()
+                .name("호돌맨")
+                .email("hodolman88@gmail.com")
+                .password("1234") // 암호화 알고리즘 -> Scrypt, Bcrypt
+                .build();
+        Session session = user.addSession();
+        userRepository.save(user);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/foo")
+                        .header("Authorization", session.getAccessToken() + "other")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
@@ -153,4 +173,5 @@ class AuthControllerTest {
         //then
 
     }
+
 }
