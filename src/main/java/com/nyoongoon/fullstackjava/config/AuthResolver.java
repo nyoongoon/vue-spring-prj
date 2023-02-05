@@ -11,6 +11,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,8 +29,14 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 //        String accessToken = webRequest.getParameter("accessToken");
         // getParameter 형태로 가져오면 다른 정보와 충돌이 될 수 있기 떄문에 헤더 사용!
-        String accessToken = webRequest.getHeader("Authorization");
-        if(accessToken == null || accessToken.equals("")){
+//        String accessToken = webRequest.getHeader("Authorization"); => 쿠키로 변경
+        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+        if(servletRequest == null){
+            throw new Unauthorized();
+        }
+
+        Cookie[] cookies = servletRequest.getCookies();
+        if(cookies.length == 0){
             throw new Unauthorized();
         }
         // DB 사용자 확인 작업
