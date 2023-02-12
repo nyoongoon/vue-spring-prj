@@ -5,6 +5,7 @@ import com.nyoongoon.fullstackjava.domain.Session;
 import com.nyoongoon.fullstackjava.exception.Unauthorized;
 import com.nyoongoon.fullstackjava.repository.SessionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -15,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
@@ -32,15 +34,18 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 //        String accessToken = webRequest.getHeader("Authorization"); => 쿠키로 변경
         HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         if(servletRequest == null){
+            log.error("servletRequest null");
             throw new Unauthorized();
         }
 
         Cookie[] cookies = servletRequest.getCookies();
         if(cookies.length == 0){
+            log.error("쿠키가 없음");
             throw new Unauthorized();
         }
         // DB 사용자 확인 작업
         // ...
+        String accessToken = cookies[0].getValue();
         Session session = sessionRepository.findByAccessToken(accessToken)
                 .orElseThrow(Unauthorized::new);
 
